@@ -72,7 +72,7 @@ public class TemplateEngine {
         return result;
     }
 
-    private String readFromFile (String fileName) throws FileNotFoundException {
+    private String readFromFile(String fileName) throws FileNotFoundException {
         try {
             File file = new File(Objects.requireNonNull(getClass().getClassLoader().getResource(fileName)).getPath());
 

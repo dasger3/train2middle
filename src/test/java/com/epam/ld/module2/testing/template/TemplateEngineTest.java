@@ -1,8 +1,8 @@
 package com.epam.ld.module2.testing.template;
 
 import com.epam.ld.module2.testing.Client;
-import com.epam.ld.module2.testing.MailServer;
 import com.epam.ld.module2.testing.Messenger;
+import com.epam.ld.module2.testing.server.MailServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,6 +21,7 @@ public class TemplateEngineTest {
     Client client;
 
     private final String CORRECT_INPUT = "Subject: Test subject\nText: Test message text\nSender: voronin@dlit.dp.ua\n";
+    private final Template EXAMPLE_TEMPLATE = new Template("Test subject", "Test message text", "voronin@dlit.dp.ua");
 
     @BeforeEach
     public void setUp() {
@@ -32,9 +33,8 @@ public class TemplateEngineTest {
     public void checkCreatingTemplateFromCorrectInput() {
 
         Template result = templateEngine.createTemplate(CORRECT_INPUT);
-        Template expected = new Template("Test subject", "Test message text", "voronin@dlit.dp.ua");
 
-        assertEquals(expected, result);
+        assertEquals(EXAMPLE_TEMPLATE, result);
     }
 
     @ParameterizedTest
@@ -73,9 +73,8 @@ public class TemplateEngineTest {
         String input = "Subject: Test subject\nText: Test message text\nSender: voronin@dlit.dp.ua";
 
         Template result = templateEngine.createTemplate(input);
-        Template expected = new Template("Test subject", "Test message text", "voronin@dlit.dp.ua");
 
-        assertEquals(expected, result);
+        assertEquals(EXAMPLE_TEMPLATE, result);
     }
 
     @Test
@@ -84,9 +83,27 @@ public class TemplateEngineTest {
         String input = "Tag: Some tag\nSubject: Test subject\nText: Test message text\nSome field: test\nSender: voronin@dlit.dp.ua";
 
         Template result = templateEngine.createTemplate(input);
-        Template expected = new Template("Test subject", "Test message text", "voronin@dlit.dp.ua");
 
-        assertEquals(expected, result);
+        assertEquals(EXAMPLE_TEMPLATE, result);
+    }
+
+    @Test void checkIfGeneratedTemplateHasInputParams () throws FileNotFoundException {
+        String message = templateEngine.generateMessage(EXAMPLE_TEMPLATE, client);
+        assertTrue(message.contains(EXAMPLE_TEMPLATE.getSubject()));
+        assertTrue(message.contains(EXAMPLE_TEMPLATE.getText()));
+        assertTrue(message.contains(EXAMPLE_TEMPLATE.getSender()));
+    }
+
+    @Test
+    public void checkIfGeneratedTemplateSends() throws FileNotFoundException {
+        MailServer mailServer = mock(MailServer.class);
+
+        Messenger messenger = new Messenger(mailServer, templateEngine);
+        Template template = templateEngine.createTemplate(CORRECT_INPUT);
+
+        messenger.sendMessage(client, template);
+
+        verify(mailServer).send(eq(client.getAddresses()), anyString());
     }
 
     @Test

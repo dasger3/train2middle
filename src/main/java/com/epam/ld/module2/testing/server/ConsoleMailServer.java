@@ -1,0 +1,8 @@
+package com.epam.ld.module2.testing.server;
+
+public class ConsoleMailServer implements MailServer {
+
+    @Override
+    public void send(String address, String messageContent) {
+    }
+}

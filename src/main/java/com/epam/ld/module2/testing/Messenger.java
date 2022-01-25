@@ -1,6 +1,9 @@
 package com.epam.ld.module2.testing;
 
 
+import com.epam.ld.module2.testing.server.ConsoleMailServer;
+import com.epam.ld.module2.testing.server.FileMailServer;
+import com.epam.ld.module2.testing.server.MailServer;
 import com.epam.ld.module2.testing.template.Template;
 import com.epam.ld.module2.testing.template.TemplateEngine;
 
@@ -35,5 +38,21 @@ public class Messenger {
             String messageContent =
                     templateEngine.generateMessage(template, client);
             mailServer.send(client.getAddresses(), messageContent);
+    }
+
+    public static void main(String[] args) {
+        TemplateEngine templateEngine = new TemplateEngine();
+        Messenger messenger;
+        MailServer mailServer;
+
+        if (args.length > 0) {
+            System.out.println("File mode");
+            mailServer = new FileMailServer();
+        }
+        else {
+            System.out.println("Console mode");
+            mailServer = new ConsoleMailServer();
+        }
+
     }
 }
