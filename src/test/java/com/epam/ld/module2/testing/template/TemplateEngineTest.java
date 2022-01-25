@@ -35,9 +35,7 @@ public class TemplateEngineTest {
     })
     public void checkCreatingTemplateFromWrongInput (String input) {
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            templateEngine.createTemplate(input);
-        });
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> templateEngine.createTemplate(input));
 
         String expectedMessage = "Wrong input";
         String actualMessage = exception.getMessage();
@@ -50,9 +48,7 @@ public class TemplateEngineTest {
 
         String input = "Subject: \nText: Test message text\nSender: voronin@dlit.dp.ua\n";
 
-        Exception exception = assertThrows(NullPointerException.class, () -> {
-            templateEngine.createTemplate(input);
-        });
+        Exception exception = assertThrows(NullPointerException.class, () -> templateEngine.createTemplate(input));
 
         String expectedMessage = "One or more required fields are null";
         String actualMessage = exception.getMessage();
@@ -60,4 +56,14 @@ public class TemplateEngineTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
+    @Test
+    public void checkCreatingTemplateWhenValueEndsWithEndOfInput () {
+
+        String input = "Subject: Test subject\nText: Test message text\nSender: voronin@dlit.dp.ua";
+
+        Template result = templateEngine.createTemplate(input);
+        Template expected = new Template("Test subject", "Test message text", "voronin@dlit.dp.ua");
+
+        assertEquals(expected, result);
+    }
 }

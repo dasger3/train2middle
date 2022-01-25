@@ -2,6 +2,7 @@ package com.epam.ld.module2.testing.template;
 
 import com.epam.ld.module2.testing.Client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ public class TemplateEngine {
         int start = input.indexOf("Subject: ");
         if (start < 0) throw new IllegalArgumentException("Wrong input");
         int end = input.indexOf("\n", start);
+        if (end < 0) end = input.length();
         String value = input.substring(start+9, end);
         if (value.length() < 1) throw new NullPointerException("One or more required fields are null");
         template.setSubject(value);
@@ -35,6 +37,7 @@ public class TemplateEngine {
         start = input.indexOf("Text: ");
         if (start < 0) throw new IllegalArgumentException("Wrong input");
         end = input.indexOf("\n", start);
+        if (end < 0) end = input.length();
         value = input.substring(start+6, end);
         if (value.length() < 1) throw new NullPointerException("One or more required fields are null");
         template.setText(value);
@@ -43,9 +46,13 @@ public class TemplateEngine {
         start = input.indexOf("Sender: ");
         if (start < 0) throw new IllegalArgumentException("Wrong input");
         end = input.indexOf("\n", start);
+        if (end < 0) end = input.length();
         value = input.substring(start+8, end);
         if (value.length() < 1) throw new NullPointerException("One or more required fields are null");
         template.setSender(value);
         return template;
+
+
+
     }
 }
