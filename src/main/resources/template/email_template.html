@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        @import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+        body {
+            font-family: 'Open Sans', 'Helvetica Neue', 'Helvetica', 'Arial', 'Sans-Serif', sans-serif;
+            color: rgb(67, 80, 88);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        a {
+            color: rgb(26, 159, 255);
+            text-decoration: none;
+            letter-spacing: 0.1px;
+            font-family: 'Open Sans', 'Helvetica Neue', 'Helvetica', 'Arial', 'Sans-Serif', sans-serif;
+        }
+
+        h1 {
+            color: rgb(0, 134, 229);
+            font-weight: 500;
+        }
+
+        h2 {
+            color: rgb(38, 45, 51);
+        }
+
+        h3 {
+            color: rgb(38, 45, 51);
+        }
+
+        p {
+            line-height: 23px;
+            font-size: 14px;
+        }
+
+        ul {
+            font-size: 14px;
+        }
+
+        ol {
+            font-size: 14px;
+        }
+        .main {
+            border: 1px solid rgb(225, 228, 230);
+        }
+        .cta-button a {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .container {
+            max-width: 740px;
+            margin: 0 auto;
+            position: relative;
+            text-align: center;
+            height: 100%;
+        }
+
+        .content {
+            text-align: left;
+            padding: 55px 50px 50px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .footer {
+            text-align: left;
+            font-size: 13px;
+            padding-top: 25px;
+            padding-bottom: 25px;
+        }
+
+        .footer-hq {
+            position: relative;
+            float: left;
+            max-width: 60%;
+        }
+
+    </style>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+</head>
+<body style="font-family: 'Open Sans', 'Helvetica Neue', 'Helvetica', 'Arial', 'Sans-Serif',sans-serif;
+color: rgb(67, 80, 88); font-size: 14px; font-weight: 500;">
+<table class="container" style="width: 100%; max-width: 740px; position: relative; text-align: center;
+height: 100%; margin: 0 auto;">
+    <tr>
+        <td>
+            <div class="main" style="border: 1px solid rgb(225,228,230);">
+                <div class="content"
+                     style="text-align: left; position: relative; margin: 0 auto; padding: 55px 50px 50px;"
+                     align="left">
+                    <h2 style="color: rgb(38,45,51);">Messenger</h2>
+                    <p style="line-height: 23px; font-size: 14px;">Subject: #{SUBJECT}</p>
+                    <b><p style="line-height: 23px; font-size: 14px;">Dear, #{ADDRESS}!</p></b>
+                    <p style="line-height: 23px; font-size: 14px;">#{MESSAGE}</p>
+                </div>
+            </div>
+
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="footer" style="text-align: left; font-size: 13px; padding-top: 25px; margin-top: 5px;"
+                 align="left">
+                <div class="footer-hq" style="position: relative; float: left; max-width: 100%;">
+                    <span style="font-weight: bold; color: rgb(121,125,128);">From: </span>
+                    <span style="color: rgb(161,167,172);">#{SENDER}</span>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

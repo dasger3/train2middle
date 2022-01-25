@@ -1,8 +1,11 @@
 package com.epam.ld.module2.testing;
 
+import lombok.AllArgsConstructor;
+
 /**
  * The type Client.
  */
+@AllArgsConstructor
 public class Client {
     private String addresses;
 

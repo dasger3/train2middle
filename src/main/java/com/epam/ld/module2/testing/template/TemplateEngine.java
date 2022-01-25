@@ -1,16 +1,26 @@
 package com.epam.ld.module2.testing.template;
 
 import com.epam.ld.module2.testing.Client;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 /**
  * The type Template engine.
  */
+@Getter
+@Setter
 public class TemplateEngine {
+
+    private String pathTemplate = "template/email_template.html";
     /**
      * Generate message string.
      *
@@ -18,8 +28,15 @@ public class TemplateEngine {
      * @param client   the client
      * @return the string
      */
-    public String generateMessage(Template template, Client client) {
-        return null;
+    public String generateMessage(Template template, Client client) throws FileNotFoundException {
+
+        String templateText = readFromFile(getPathTemplate());
+
+        return templateText
+                .replace("#{ADDRESS}", client.getAddresses())
+                .replace("#{SUBJECT}", template.getSubject())
+                .replace("#{MESSAGE}", template.getText())
+                .replace("#{SENDER}", template.getSender());
     }
 
     public Template createTemplate(String input) {
@@ -53,5 +70,16 @@ public class TemplateEngine {
         if (result.length() < 1) throw new NullPointerException("One or more required fields are null");
 
         return result;
+    }
+
+    private String readFromFile (String fileName) throws FileNotFoundException {
+        try {
+            File file = new File(Objects.requireNonNull(getClass().getClassLoader().getResource(fileName)).getPath());
+
+            return Files.toString(file, Charsets.UTF_8);
+        }
+        catch (IOException | NullPointerException e) {
+            throw new FileNotFoundException("Can`t open or something wrong with file named: " + fileName);
+        }
     }
 }

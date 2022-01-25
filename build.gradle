@@ -43,6 +43,12 @@ dependencies {
 
     testCompileOnly 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    implementation group: 'com.google.guava', name: 'guava', version: '11.0.2'
+
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+
+
 }
 
 test {

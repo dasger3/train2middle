@@ -1,26 +1,37 @@
 package com.epam.ld.module2.testing.template;
 
+import com.epam.ld.module2.testing.Client;
+import com.epam.ld.module2.testing.MailServer;
+import com.epam.ld.module2.testing.Messenger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.io.FileNotFoundException;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 public class TemplateEngineTest {
 
     TemplateEngine templateEngine;
+    Client client;
+
+    private final String CORRECT_INPUT = "Subject: Test subject\nText: Test message text\nSender: voronin@dlit.dp.ua\n";
 
     @BeforeEach
     public void setUp() {
         templateEngine = new TemplateEngine();
+        client = new Client("oleksii_voronin2@epam.com");
     }
 
     @Test
-    public void checkCreatingTemplateFromCorrectInput () {
-        String input = "Subject: Test subject\nText: Test message text\nSender: voronin@dlit.dp.ua\n";
+    public void checkCreatingTemplateFromCorrectInput() {
 
-        Template result = templateEngine.createTemplate(input);
+        Template result = templateEngine.createTemplate(CORRECT_INPUT);
         Template expected = new Template("Test subject", "Test message text", "voronin@dlit.dp.ua");
 
         assertEquals(expected, result);
@@ -33,7 +44,7 @@ public class TemplateEngineTest {
             "Sender: voronin@dlit.dp.ua\n",
             "Subject: Test subject\nTextWrong: Test message text\nSender: voronin@dlit.dp.ua\n"
     })
-    public void checkCreatingTemplateFromWrongInput (String input) {
+    public void checkCreatingTemplateFromWrongInput(String input) {
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> templateEngine.createTemplate(input));
 
@@ -44,7 +55,7 @@ public class TemplateEngineTest {
     }
 
     @Test
-    public void checkCreatingTemplateWithNullValues () {
+    public void checkCreatingTemplateWithNullValues() {
 
         String input = "Subject: \nText: Test message text\nSender: voronin@dlit.dp.ua\n";
 
@@ -57,7 +68,7 @@ public class TemplateEngineTest {
     }
 
     @Test
-    public void checkCreatingTemplateWhenValueEndsWithEndOfInput () {
+    public void checkCreatingTemplateWhenValueEndsWithEndOfInput() {
 
         String input = "Subject: Test subject\nText: Test message text\nSender: voronin@dlit.dp.ua";
 
@@ -68,7 +79,7 @@ public class TemplateEngineTest {
     }
 
     @Test
-    public void checkCreatingTemplateWhenInputHasExtraFields () {
+    public void checkCreatingTemplateWhenInputHasExtraFields() {
 
         String input = "Tag: Some tag\nSubject: Test subject\nText: Test message text\nSome field: test\nSender: voronin@dlit.dp.ua";
 
@@ -76,5 +87,25 @@ public class TemplateEngineTest {
         Template expected = new Template("Test subject", "Test message text", "voronin@dlit.dp.ua");
 
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void checkIfTemplateDoNotExists() {
+        MailServer mailServer = mock(MailServer.class);
+
+        Messenger messenger = new Messenger(mailServer, templateEngine);
+        Template template = templateEngine.createTemplate(CORRECT_INPUT);
+
+        String badPart = "wrong path to file";
+
+        templateEngine.setPathTemplate(badPart);
+
+        Exception exception = assertThrows(FileNotFoundException.class, () -> messenger.sendMessage(client, template));
+
+        String expectedMessage = "Can`t open or something wrong with file named: " + badPart;
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+        verify(mailServer, never()).send(eq(client.getAddresses()), anyString());
     }
 }
