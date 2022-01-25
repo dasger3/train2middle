@@ -24,20 +24,28 @@ public class TemplateEngine {
     public Template createTemplate(String input) {
         Template template = new Template();
 
-        String[] inputLines = input.split("\n");
+        int start = input.indexOf("Subject: ");
+        if (start < 0) throw new IllegalArgumentException("Wrong input");
+        int end = input.indexOf("\n", start);
+        String value = input.substring(start+9, end);
+        if (value.length() < 1) throw new NullPointerException("One or more required fields are null");
+        template.setSubject(value);
 
-        List<String> filteredLines = Arrays.stream(inputLines)
-                .filter(row -> row.startsWith("Subject:") ||
-                        row.startsWith("Text:") ||
-                        row.startsWith("Sender:"))
-                .collect(Collectors.toList());
 
-        if (filteredLines.size() < 3) throw new IllegalArgumentException("Wrong input");
+        start = input.indexOf("Text: ");
+        if (start < 0) throw new IllegalArgumentException("Wrong input");
+        end = input.indexOf("\n", start);
+        value = input.substring(start+6, end);
+        if (value.length() < 1) throw new NullPointerException("One or more required fields are null");
+        template.setText(value);
 
-        template.setSubject(filteredLines.get(0).substring(filteredLines.get(0).indexOf(" ") + 1));
-        template.setText(filteredLines.get(1).substring(filteredLines.get(1).indexOf(" ") + 1));
-        template.setSender(filteredLines.get(2).substring(filteredLines.get(2).indexOf(" ") + 1));
 
+        start = input.indexOf("Sender: ");
+        if (start < 0) throw new IllegalArgumentException("Wrong input");
+        end = input.indexOf("\n", start);
+        value = input.substring(start+8, end);
+        if (value.length() < 1) throw new NullPointerException("One or more required fields are null");
+        template.setSender(value);
         return template;
     }
 }
