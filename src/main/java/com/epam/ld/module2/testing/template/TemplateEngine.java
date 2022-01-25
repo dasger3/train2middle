@@ -25,34 +25,33 @@ public class TemplateEngine {
     public Template createTemplate(String input) {
         Template template = new Template();
 
-        int start = input.indexOf("Subject: ");
-        if (start < 0) throw new IllegalArgumentException("Wrong input");
-        int end = input.indexOf("\n", start);
-        if (end < 0) end = input.length();
-        String value = input.substring(start+9, end);
-        if (value.length() < 1) throw new NullPointerException("One or more required fields are null");
-        template.setSubject(value);
+        List<String> requiredFields = new ArrayList<String>() {
+            {
+                add("Subject: ");
+                add("Text: ");
+                add("Sender: ");
+            }
+        };
 
+        template.setSubject(parseValue(input, requiredFields.get(0)));
+        template.setText(parseValue(input, requiredFields.get(1)));
+        template.setSender(parseValue(input, requiredFields.get(2)));
 
-        start = input.indexOf("Text: ");
-        if (start < 0) throw new IllegalArgumentException("Wrong input");
-        end = input.indexOf("\n", start);
-        if (end < 0) end = input.length();
-        value = input.substring(start+6, end);
-        if (value.length() < 1) throw new NullPointerException("One or more required fields are null");
-        template.setText(value);
-
-
-        start = input.indexOf("Sender: ");
-        if (start < 0) throw new IllegalArgumentException("Wrong input");
-        end = input.indexOf("\n", start);
-        if (end < 0) end = input.length();
-        value = input.substring(start+8, end);
-        if (value.length() < 1) throw new NullPointerException("One or more required fields are null");
-        template.setSender(value);
         return template;
 
+    }
 
+    private String parseValue(String input, String nameValue) {
+        int start, end;
+        String result;
 
+        start = input.indexOf(nameValue);
+        if (start < 0) throw new IllegalArgumentException("Wrong input");
+        end = input.indexOf("\n", start);
+        if (end < 0) end = input.length();
+        result = input.substring(start + nameValue.length(), end);
+        if (result.length() < 1) throw new NullPointerException("One or more required fields are null");
+
+        return result;
     }
 }
