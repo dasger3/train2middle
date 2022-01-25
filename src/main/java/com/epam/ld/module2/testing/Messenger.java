@@ -6,15 +6,22 @@ import com.epam.ld.module2.testing.server.FileMailServer;
 import com.epam.ld.module2.testing.server.MailServer;
 import com.epam.ld.module2.testing.template.Template;
 import com.epam.ld.module2.testing.template.TemplateEngine;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 /**
  * The type Messenger.
  */
+@Getter
+@Setter
 public class Messenger {
     private MailServer mailServer;
     private TemplateEngine templateEngine;
+
+    private static Client client = new Client("oleksii_voronin2@epam.com");
 
     /**
      * Instantiates a new Messenger.
@@ -35,24 +42,32 @@ public class Messenger {
      * @param template the template
      */
     public void sendMessage(Client client, Template template) throws FileNotFoundException {
-            String messageContent =
-                    templateEngine.generateMessage(template, client);
-            mailServer.send(client.getAddresses(), messageContent);
+        String messageContent =
+                templateEngine.generateMessage(template, client);
+        mailServer.send(client.getAddresses(), messageContent);
     }
 
     public static void main(String[] args) {
         TemplateEngine templateEngine = new TemplateEngine();
         Messenger messenger;
         MailServer mailServer;
-
-        if (args.length > 0) {
-            System.out.println("File mode");
+        StringBuilder input = new StringBuilder();
+        if (args.length == 2) {
             mailServer = new FileMailServer();
-        }
-        else {
-            System.out.println("Console mode");
+            input = null;
+        } else if (args.length == 0) {
+            Scanner scanner = new Scanner(System.in);
+            while(scanner.hasNext()) input.append(scanner.nextLine()).append("\n");
             mailServer = new ConsoleMailServer();
+        } else {
+            System.out.println("Incorrect number of arguments");
+            return;
         }
-
+        try {
+            messenger = new Messenger(mailServer, templateEngine);
+            messenger.sendMessage(client, templateEngine.createTemplate(input.toString()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

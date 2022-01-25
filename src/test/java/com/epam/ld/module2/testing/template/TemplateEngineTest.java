@@ -1,5 +1,6 @@
 package com.epam.ld.module2.testing.template;
 
+import com.epam.ld.module2.testing.BaseClassTest;
 import com.epam.ld.module2.testing.Client;
 import com.epam.ld.module2.testing.Messenger;
 import com.epam.ld.module2.testing.server.MailServer;
@@ -15,13 +16,12 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-public class TemplateEngineTest {
+public class TemplateEngineTest extends BaseClassTest {
 
     TemplateEngine templateEngine;
     Client client;
 
-    private final String CORRECT_INPUT = "Subject: Test subject\nText: Test message text\nSender: voronin@dlit.dp.ua\n";
-    private final Template EXAMPLE_TEMPLATE = new Template("Test subject", "Test message text", "voronin@dlit.dp.ua");
+
 
     @BeforeEach
     public void setUp() {

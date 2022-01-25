@@ -5,12 +5,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MailServerTest {
+public class MailServerTest extends BaseClassTest{
 
     private static final String EOL = System.getProperty("line.separator");
 
@@ -27,16 +29,52 @@ public class MailServerTest {
     public void tearDown() {
 
     }
+
     @Test
-    public void checkMailServerWorksInConsoleMode() {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    public void checkMailServerWorksInConsoleModeWithCorrectInput() {
+        ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
+        ByteArrayInputStream in = new ByteArrayInputStream(CORRECT_INPUT.getBytes());
         PrintStream console = System.out;
+
         try {
-            System.setOut(new PrintStream(bytes));
+            System.setOut(new PrintStream(bytesOut));
+            System.setIn(in);
             Messenger.main(new String[]{});
         } finally {
             System.setOut(console);
         }
-        assertEquals("Console mode" + EOL, bytes.toString());
+        assertTrue(bytesOut.toString().contains("Mail sent to console" + EOL));
+    }
+
+    @Test
+    public void checkMailServerWorksInConsoleModeWithIncorrectInput() {
+        ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
+        ByteArrayInputStream in = new ByteArrayInputStream("wrong input".getBytes());
+        PrintStream console = System.out;
+
+        try {
+            System.setOut(new PrintStream(bytesOut));
+            System.setIn(in);
+            Messenger.main(new String[]{});
+        } finally {
+            System.setOut(console);
+        }
+        assertEquals("Wrong input" + EOL, bytesOut.toString());
+    }
+
+    @Test
+    public void checkMailServerDoNotWorksWithWrongInputConsoleParams() {
+        ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
+        ByteArrayInputStream in = new ByteArrayInputStream(CORRECT_INPUT.getBytes());
+        PrintStream console = System.out;
+
+        try {
+            System.setOut(new PrintStream(bytesOut));
+            System.setIn(in);
+            Messenger.main(new String[]{"first", "second", "third"});
+        } finally {
+            System.setOut(console);
+        }
+        assertEquals("Incorrect number of arguments" + EOL, bytesOut.toString());
     }
 }
