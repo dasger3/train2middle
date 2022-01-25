@@ -66,4 +66,15 @@ public class TemplateEngineTest {
 
         assertEquals(expected, result);
     }
+
+    @Test
+    public void checkCreatingTemplateWhenInputHasExtraFields () {
+
+        String input = "Tag: Some tag\nSubject: Test subject\nText: Test message text\nSome field: test\nSender: voronin@dlit.dp.ua";
+
+        Template result = templateEngine.createTemplate(input);
+        Template expected = new Template("Test subject", "Test message text", "voronin@dlit.dp.ua");
+
+        assertEquals(expected, result);
+    }
 }
