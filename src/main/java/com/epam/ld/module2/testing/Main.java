@@ -16,7 +16,7 @@ public class Main {
 
         try {
             modeService.execute(args);
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }

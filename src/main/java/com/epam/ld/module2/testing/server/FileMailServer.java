@@ -6,11 +6,9 @@ import java.io.IOException;
 
 public class FileMailServer implements MailServer {
 
-
-
     @Override
     public void send(String address, String messageContent) throws IOException {
-        System.out.println("Get here");
+        System.out.println("Message sent to file");
         FileService.writeToFile(messageContent);
     }
 }

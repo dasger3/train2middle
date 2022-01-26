@@ -31,7 +31,7 @@ public class MessengerTest extends BaseClassForTest {
     Messenger messenger;
 
     @BeforeEach
-    public void init() {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
 
         when(client.getAddresses()).thenReturn(TEST_ADDRESS);
