@@ -3,6 +3,8 @@ package com.epam.ld.module2.testing;
 import com.epam.ld.module2.testing.models.Template;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
+import org.junit.jupiter.api.condition.JRE;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -31,5 +33,11 @@ public class BaseClassTest {
     @Test
     public void sandbox() {
 
+    }
+
+    @Test
+    @EnabledForJreRange(min = JRE.JAVA_8, max = JRE.JAVA_13)
+    public void shouldOnlyRunOnJava8UntilJava13() {
+        // this test will only run on Java 8, 9, 10, 11, 12, and 13.
     }
 }

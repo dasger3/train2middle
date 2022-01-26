@@ -27,8 +27,6 @@ public class TemplateEngineTest extends BaseClassTest {
     TemplateEngine templateEngine;
     Client client;
 
-
-
     @BeforeEach
     public void setUp() {
         templateEngine = new TemplateEngine();
