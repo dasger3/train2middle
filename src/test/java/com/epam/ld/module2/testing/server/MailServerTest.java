@@ -2,15 +2,16 @@ package com.epam.ld.module2.testing.server;
 
 import com.epam.ld.module2.testing.BaseClassTest;
 import com.epam.ld.module2.testing.Messenger;
-import com.epam.ld.module2.testing.models.Client;
 import com.epam.ld.module2.testing.service.FileService;
-import com.epam.ld.module2.testing.service.TemplateEngine;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -23,17 +24,8 @@ public class MailServerTest extends BaseClassTest {
     private static final String INPUT_FILE = "input.txt";
     private static final String OUTPUT_FILE = "output.html";
 
-    TemplateEngine templateEngine;
-    Client client;
-
-    @TempDir
-    File anotherTempDir;
-
     @BeforeEach
     public void setUp() {
-        templateEngine = new TemplateEngine();
-        client = new Client("oleksii_voronin2@epam.com");
-
     }
 
     @AfterEach

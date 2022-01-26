@@ -2,11 +2,14 @@ package com.epam.ld.module2.testing.service;
 
 import com.epam.ld.module2.testing.BaseClassTest;
 import com.epam.ld.module2.testing.Messenger;
+import com.epam.ld.module2.testing.TestResultExtension;
 import com.epam.ld.module2.testing.models.Client;
 import com.epam.ld.module2.testing.models.Template;
 import com.epam.ld.module2.testing.server.MailServer;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -18,6 +21,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+@ExtendWith({TestResultExtension.class})
 public class TemplateEngineTest extends BaseClassTest {
 
     TemplateEngine templateEngine;
@@ -89,7 +93,8 @@ public class TemplateEngineTest extends BaseClassTest {
         assertEquals(EXAMPLE_TEMPLATE, result);
     }
 
-    @Test void checkIfGeneratedTemplateHasInputParams () throws FileNotFoundException {
+    @Test
+    public void checkIfGeneratedTemplateHasInputParams () throws FileNotFoundException {
         String message = templateEngine.generateMessage(EXAMPLE_TEMPLATE, client);
         assertTrue(message.contains(EXAMPLE_TEMPLATE.getSubject()));
         assertTrue(message.contains(EXAMPLE_TEMPLATE.getText()));
@@ -109,6 +114,7 @@ public class TemplateEngineTest extends BaseClassTest {
     }
 
     @Test
+    @Tag("slow")
     public void checkIfTemplateDoNotExists() throws IOException {
         MailServer mailServer = mock(MailServer.class);
 
