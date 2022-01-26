@@ -1,7 +1,7 @@
 package com.epam.ld.module2.testing.server;
 
-import com.epam.ld.module2.testing.BaseClassTest;
-import com.epam.ld.module2.testing.Messenger;
+import com.epam.ld.module2.testing.BaseClassForTest;
+import com.epam.ld.module2.testing.Main;
 import com.epam.ld.module2.testing.service.FileService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MailServerTest extends BaseClassTest {
+public class MailServerForTest extends BaseClassForTest {
 
     private static final String EOL = System.getProperty("line.separator");
     private static final String INPUT_FILE = "input.txt";
@@ -42,7 +42,7 @@ public class MailServerTest extends BaseClassTest {
         try {
             System.setOut(new PrintStream(bytesOut));
             System.setIn(in);
-            Messenger.main(new String[]{});
+            Main.main(new String[]{});
         } finally {
             System.setOut(console);
         }
@@ -58,7 +58,7 @@ public class MailServerTest extends BaseClassTest {
         try {
             System.setOut(new PrintStream(bytesOut));
             System.setIn(in);
-            Messenger.main(new String[]{});
+            Main.main(new String[]{});
         } finally {
             System.setOut(console);
         }
@@ -74,7 +74,7 @@ public class MailServerTest extends BaseClassTest {
         try {
             System.setOut(new PrintStream(bytesOut));
             System.setIn(in);
-            Messenger.main(new String[]{"first", "second", "third"});
+            Main.main(new String[]{"first", "second", "third"});
         } finally {
             System.setOut(console);
         }
@@ -86,7 +86,7 @@ public class MailServerTest extends BaseClassTest {
 
         Path outputPath = tempDir.resolve(OUTPUT_FILE);
 
-        Messenger.main(new String[]{INPUT_FILE, outputPath.toAbsolutePath().toString()});
+        Main.main(new String[]{INPUT_FILE, outputPath.toAbsolutePath().toString()});
 
         assertTrue(Files.exists(outputPath), "File should exist");
 
@@ -107,7 +107,9 @@ public class MailServerTest extends BaseClassTest {
 
         FileService.OUTPUT_FILE = outputPath.toAbsolutePath().toString();
 
-        Messenger.main(new String[]{"wrong path", OUTPUT_FILE});
+        Main.main(new String[]{"wrong path", OUTPUT_FILE});
         assertEquals("Can`t open or something wrong with file named: wrong path" + EOL, bytesOut.toString());
     }
+
+
 }

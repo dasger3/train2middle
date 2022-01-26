@@ -1,36 +1,35 @@
 package com.epam.ld.module2.testing.service;
 
-import com.epam.ld.module2.testing.BaseClassTest;
-import com.epam.ld.module2.testing.Messenger;
+import com.epam.ld.module2.testing.BaseClassForTest;
 import com.epam.ld.module2.testing.TestResultExtension;
 import com.epam.ld.module2.testing.models.Client;
 import com.epam.ld.module2.testing.models.Template;
-import com.epam.ld.module2.testing.server.MailServer;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith({TestResultExtension.class})
-public class TemplateEngineTest extends BaseClassTest {
+public class TemplateEngineForTest extends BaseClassForTest {
 
     TemplateEngine templateEngine;
+    @Mock
     Client client;
 
     @BeforeEach
     public void setUp() {
+        MockitoAnnotations.initMocks(this);
+
         templateEngine = new TemplateEngine();
-        client = new Client("oleksii_voronin2@epam.com");
+        when(client.getAddresses()).thenReturn(TEST_ADDRESS);
     }
 
     @Test
@@ -97,38 +96,5 @@ public class TemplateEngineTest extends BaseClassTest {
         assertTrue(message.contains(EXAMPLE_TEMPLATE.getSubject()));
         assertTrue(message.contains(EXAMPLE_TEMPLATE.getText()));
         assertTrue(message.contains(EXAMPLE_TEMPLATE.getSender()));
-    }
-
-    @Test
-    public void checkIfGeneratedTemplateSends() throws IOException {
-        MailServer mailServer = mock(MailServer.class);
-
-        Messenger messenger = new Messenger(mailServer, templateEngine);
-        Template template = templateEngine.createTemplate(CORRECT_INPUT);
-
-        messenger.sendMessage(client, template);
-
-        verify(mailServer).send(eq(client.getAddresses()), anyString());
-    }
-
-    @Test
-    @Tag("slow")
-    public void checkIfTemplateDoNotExists() throws IOException {
-        MailServer mailServer = mock(MailServer.class);
-
-        Messenger messenger = new Messenger(mailServer, templateEngine);
-        Template template = templateEngine.createTemplate(CORRECT_INPUT);
-
-        String badPart = "wrong path to file";
-
-        templateEngine.setPathTemplate(badPart);
-
-        Exception exception = assertThrows(FileNotFoundException.class, () -> messenger.sendMessage(client, template));
-
-        String expectedMessage = "Can`t open or something wrong with file named: " + badPart;
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-        verify(mailServer, never()).send(eq(client.getAddresses()), anyString());
     }
 }

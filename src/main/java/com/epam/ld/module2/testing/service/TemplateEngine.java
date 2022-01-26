@@ -25,7 +25,7 @@ public class TemplateEngine {
      * @return the string
      */
     public String generateMessage(Template template, Client client) throws FileNotFoundException {
-
+        System.out.println(pathTemplate);
         String templateText = FileService.readFromFile(getPathTemplate());
 
         return templateText
