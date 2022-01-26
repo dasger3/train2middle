@@ -1,0 +1,3 @@
+Subject: Test subject
+Text: Test message text
+Sender: voronin@dlit.dp.ua

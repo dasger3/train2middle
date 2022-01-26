@@ -1,28 +1,39 @@
-package com.epam.ld.module2.testing;
+package com.epam.ld.module2.testing.server;
 
-import com.epam.ld.module2.testing.template.TemplateEngine;
+import com.epam.ld.module2.testing.BaseClassTest;
+import com.epam.ld.module2.testing.Messenger;
+import com.epam.ld.module2.testing.models.Client;
+import com.epam.ld.module2.testing.service.FileService;
+import com.epam.ld.module2.testing.service.TemplateEngine;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MailServerTest extends BaseClassTest{
+public class MailServerTest extends BaseClassTest {
 
     private static final String EOL = System.getProperty("line.separator");
+    private static final String INPUT_FILE = "input.txt";
+    private static final String OUTPUT_FILE = "output.html";
 
     TemplateEngine templateEngine;
     Client client;
+
+    @TempDir
+    File anotherTempDir;
 
     @BeforeEach
     public void setUp() {
         templateEngine = new TemplateEngine();
         client = new Client("oleksii_voronin2@epam.com");
+
     }
 
     @AfterEach
@@ -63,7 +74,7 @@ public class MailServerTest extends BaseClassTest{
     }
 
     @Test
-    public void checkMailServerDoNotWorksWithWrongInputConsoleParams() {
+    public void checkMailServerDoesNotWorkWithWrongInputConsoleParams() {
         ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
         ByteArrayInputStream in = new ByteArrayInputStream(CORRECT_INPUT.getBytes());
         PrintStream console = System.out;
@@ -76,5 +87,35 @@ public class MailServerTest extends BaseClassTest{
             System.setOut(console);
         }
         assertEquals("Incorrect number of arguments" + EOL, bytesOut.toString());
+    }
+
+    @Test
+    public void checkMailServerWorksCorrectInFileMode(@TempDir Path tempDir) throws IOException {
+
+        Path outputPath = tempDir.resolve(OUTPUT_FILE);
+
+        Messenger.main(new String[]{INPUT_FILE, outputPath.toAbsolutePath().toString()});
+
+        assertTrue(Files.exists(outputPath), "File should exist");
+
+        StringBuilder s = new StringBuilder();
+        Files.readAllLines(outputPath).forEach(s::append);
+        String fullResultFile = s.toString();
+
+        assertTrue(fullResultFile.contains(EXAMPLE_TEMPLATE.getSender()));
+        assertTrue(fullResultFile.contains(EXAMPLE_TEMPLATE.getText()));
+        assertTrue(fullResultFile.contains(EXAMPLE_TEMPLATE.getSubject()));
+    }
+
+    @Test
+    public void checkIfFileWithInputNameDoesNotExist(@TempDir Path tempDir) {
+        ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bytesOut));
+        Path outputPath = tempDir.resolve(OUTPUT_FILE);
+
+        FileService.OUTPUT_FILE = outputPath.toAbsolutePath().toString();
+
+        Messenger.main(new String[]{"wrong path", OUTPUT_FILE});
+        assertEquals("Can`t open or something wrong with file named: wrong path" + EOL, bytesOut.toString());
     }
 }

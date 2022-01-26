@@ -1,4 +1,4 @@
-package com.epam.ld.module2.testing.template;
+package com.epam.ld.module2.testing.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

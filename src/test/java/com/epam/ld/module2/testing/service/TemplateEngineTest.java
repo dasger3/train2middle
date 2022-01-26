@@ -1,8 +1,9 @@
-package com.epam.ld.module2.testing.template;
+package com.epam.ld.module2.testing.service;
 
 import com.epam.ld.module2.testing.BaseClassTest;
-import com.epam.ld.module2.testing.Client;
 import com.epam.ld.module2.testing.Messenger;
+import com.epam.ld.module2.testing.models.Client;
+import com.epam.ld.module2.testing.models.Template;
 import com.epam.ld.module2.testing.server.MailServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -95,7 +97,7 @@ public class TemplateEngineTest extends BaseClassTest {
     }
 
     @Test
-    public void checkIfGeneratedTemplateSends() throws FileNotFoundException {
+    public void checkIfGeneratedTemplateSends() throws IOException {
         MailServer mailServer = mock(MailServer.class);
 
         Messenger messenger = new Messenger(mailServer, templateEngine);
@@ -107,7 +109,7 @@ public class TemplateEngineTest extends BaseClassTest {
     }
 
     @Test
-    public void checkIfTemplateDoNotExists() {
+    public void checkIfTemplateDoNotExists() throws IOException {
         MailServer mailServer = mock(MailServer.class);
 
         Messenger messenger = new Messenger(mailServer, templateEngine);

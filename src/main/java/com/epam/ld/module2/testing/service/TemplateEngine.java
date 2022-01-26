@@ -1,17 +1,13 @@
-package com.epam.ld.module2.testing.template;
+package com.epam.ld.module2.testing.service;
 
-import com.epam.ld.module2.testing.Client;
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
+import com.epam.ld.module2.testing.models.Client;
+import com.epam.ld.module2.testing.models.Template;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * The type Template engine.
@@ -30,7 +26,7 @@ public class TemplateEngine {
      */
     public String generateMessage(Template template, Client client) throws FileNotFoundException {
 
-        String templateText = readFromFile(getPathTemplate());
+        String templateText = FileService.readFromFile(getPathTemplate());
 
         return templateText
                 .replace("#{ADDRESS}", client.getAddresses())
@@ -70,16 +66,5 @@ public class TemplateEngine {
         if (result.length() < 1) throw new NullPointerException("One or more required fields are null");
 
         return result;
-    }
-
-    private String readFromFile(String fileName) throws FileNotFoundException {
-        try {
-            File file = new File(Objects.requireNonNull(getClass().getClassLoader().getResource(fileName)).getPath());
-
-            return Files.toString(file, Charsets.UTF_8);
-        }
-        catch (IOException | NullPointerException e) {
-            throw new FileNotFoundException("Can`t open or something wrong with file named: " + fileName);
-        }
     }
 }
